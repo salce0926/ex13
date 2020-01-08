@@ -48,8 +48,9 @@ int canPut(int *board, int place, int number){
 
 int solve(int *board, int place){
 	if(place == OVERALL_SIZE * OVERALL_SIZE){
-		display(board);
-		printf("\n");
+		return 1;
+		// display(board);
+		// printf("\n");
 	}
 
 	int newPlace;
@@ -60,25 +61,59 @@ int solve(int *board, int place){
 	}
 
 	int i;
-	for(i = 1;i <= 9;i++){
+	for(i = 1;i <= OVERALL_SIZE;i++){
 		if(canPut(board, newPlace, i)){
 			board[newPlace] = i;
-			solve(board, newPlace + 1);
+			if(solve(board, newPlace + 1)){
+				return 1;
+			}
+			// solve(board, newPlace + 1);
 			board[newPlace] = 0;
 		}
 	}
+	return 0;
 }
 
 int main() {
 	char input[OVERALL_SIZE][OVERALL_SIZE];
 	int i;
-	for(i = 0;i < 9;i++){
-		scanf("%s", &input[i]);
+	for(i = 0;i < OVERALL_SIZE;i++){
+		scanf("%s", input[i]);
 	}
+	printf("\n");
 	int board[OVERALL_SIZE * OVERALL_SIZE];
 	for(i = 0; i < OVERALL_SIZE * OVERALL_SIZE;i++){
 		board[i] = input[i / OVERALL_SIZE][i % OVERALL_SIZE] - '0';
 	}
-	solve(board, 0);
+	if(solve(board, 0)){
+		display(board);
+		printf("This problem can be solved.\n");
+	}else{
+		printf("This problem can NOT be solved.\n");
+	}
+	// solve(board, 0);
 	return 0;
 }
+
+/*
+075090000
+902100030
+006040001
+010023000
+060000080
+500900002
+000500270
+001000809
+000060040
+
+175396428
+942178536
+386245791
+817623954
+269451387
+534987612
+698514273
+451732869
+723869145
+This problem can be solved.
+*/
