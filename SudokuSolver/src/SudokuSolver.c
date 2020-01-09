@@ -14,125 +14,113 @@
 #define OVERALL_SIZE 9
 #define BOX_SIZE 3
 
-void display(int *board)
+void display(int *board)//表示用の関数
 {
 	int i;
 	for(i = 0; i < OVERALL_SIZE * OVERALL_SIZE; i++)
 	{
-		printf("%d", board[i]);
-		if(i % OVERALL_SIZE == OVERALL_SIZE - 1)
+		printf("%d", board[i]);//一文字づつ出力
+		if(i % OVERALL_SIZE == OVERALL_SIZE - 1)//9文字で改行
 		{
 			printf("\n");
 		}
 	}
 }
 
-int canPut(int *board, int place, int number)
+int canPut(int *board, int place, int number)//指定した場所に指定した数字を置けるか調べる関数
 {
+	//placeで指定された場所から行、列、箱を特定する
 	int row 	= place / OVERALL_SIZE;
 	int column 	= place % OVERALL_SIZE;
 	int box 	= ((row / BOX_SIZE) * BOX_SIZE * OVERALL_SIZE) + ((column / BOX_SIZE) * BOX_SIZE);
+
 	int i;
 	for(i = 0; i < OVERALL_SIZE; i++)
 	{
-		if(board[(row * OVERALL_SIZE) + i] == number)
+		if(board[(row * OVERALL_SIZE) + i] == number)//同じ行に同じ数字がある場合falseを返す
 		{
 			return 0;
 		}
-		if(board[column + (i * OVERALL_SIZE)] == number)
+		if(board[column + (i * OVERALL_SIZE)] == number)//同じ列に同じ数字がある場合falseを返す
 		{
 			return 0;
 		}
-		if(board[box + ((i / BOX_SIZE) * OVERALL_SIZE) + (i % BOX_SIZE)] == number)
+		if(board[box + ((i / BOX_SIZE) * OVERALL_SIZE) + (i % BOX_SIZE)] == number)//同じ箱に同じ数字がある場合falseを返す
 		{
 			return 0;
 		}
 	}
-	return 1;
+	return 1;//ここまで来られるということは置けるのでtrueを返す
 }
 
-int solve(int *board, int place)
+int solve(int *board, int place)//実際に解くための再帰関数
 {
-	if(place == OVERALL_SIZE * OVERALL_SIZE)
+	//この関数は、1~9をひたすら当てはめながら次のマスへと進んでいく関数である。
+	//闇雲に置いていると無駄な処理が多くなるため、canPut関数によって既に置けない数字を省いている。
+	//どの数字も置けなくなった場合そのマスを0に戻し、１つ前に戻る(バックトラック)
+
+	if(place == OVERALL_SIZE * OVERALL_SIZE)//9*9の最後まで終わったなら解けているのでtrueを返す
 	{
 		return 1;
 	}
 
 	int newPlace;
-	for(newPlace = place; newPlace < OVERALL_SIZE * OVERALL_SIZE; newPlace++)
+	for(newPlace = place; newPlace < OVERALL_SIZE * OVERALL_SIZE; newPlace++)//まだ埋まっていないマスを探す
 	{
-		if(!board[newPlace])
+		if(!board[newPlace])//0であるマスでforから抜ける
 		{
 			break;
 		}
 	}
 
 	int i;
-	for(i = 1; i <= OVERALL_SIZE; i++)
+	for(i = 1; i <= OVERALL_SIZE; i++)//newPlaceに入る数字を実際に入れてみる
 	{
-		if(canPut(board, newPlace, i))
+		if(canPut(board, newPlace, i))//iをnewPlaceに置けるか調べる
 		{
-			board[newPlace] = i;
-			if(solve(board, newPlace + 1))
+			board[newPlace] = i;//置けるので、置いてみる
+			if(solve(board, newPlace + 1))//そのままplaceを次に進める
 			{
-				return 1;
+				return 1;//上手くいったらtrueを返す
 			}
-			board[newPlace] = 0;
+			board[newPlace] = 0;//上手くいかなかったら0に戻して次を試す
 		}
 	}
-	return 0;
+	return 0;//どの数も置けなかったのでfalseを返す
 }
 
-int input(int *board)
+int input(int *board)//入力用の関数
 {
-	char problem[OVERALL_SIZE][OVERALL_SIZE];
+	char problem[OVERALL_SIZE][OVERALL_SIZE];//ユーザーの入力を格納する配列
 	int i, j;
-	for(i = 0; i < OVERALL_SIZE; i++)
+	for(i = 0; i < OVERALL_SIZE; i++)//1行ずつ受け取る
 	{
 		scanf("%s", problem[i]);
 	}
 	printf("\n");
 	for(i = 0; i < OVERALL_SIZE * OVERALL_SIZE; i++)
 	{
-		board[i] = problem[i / OVERALL_SIZE][i % OVERALL_SIZE] - '0';
+		board[i] = problem[i / OVERALL_SIZE][i % OVERALL_SIZE] - '0';//文字列を数値に変換する
 	}
-	for(i = 0; i < OVERALL_SIZE * OVERALL_SIZE; i++)
+	for(i = 0; i < OVERALL_SIZE * OVERALL_SIZE; i++)//現時点で問題として成立しているかを確認する(現在実装中で、以下のコードは無能)
 	{
-		for(j = 1; j <= OVERALL_SIZE; j++)
+		int check = 0;
+		for(j = 1; j <= OVERALL_SIZE; j++)//checkはi番目のマスにいくつの数字が置けるかを格納する変数
 		{
-			if(!canPut(board, i, j)){
-				// printf("This problem can NOT be solved.\n");
-				return 0;
-			}
+			check += canPut(board, i, j);
+		}
+		if(check == 0)
+		{
+			return 0;//ここに入る場合、どの数字も置けないマスが既に存在しているのでfalseを返す
 		}
 	}
+	return 1;
 }
 
 int main() 
 {
-	// char problem[OVERALL_SIZE][OVERALL_SIZE];
-	int i, j;
-	// for(i = 0; i < OVERALL_SIZE; i++)
-	// {
-	// 	scanf("%s", problem[i]);
-	// }
-	// printf("\n");
-	int board[OVERALL_SIZE * OVERALL_SIZE];
-	// for(i = 0; i < OVERALL_SIZE * OVERALL_SIZE; i++)
-	// {
-	// 	board[i] = problem[i / OVERALL_SIZE][i % OVERALL_SIZE] - '0';
-	// }
-	// for(i = 0; i < OVERALL_SIZE * OVERALL_SIZE; i++)
-	// {
-	// 	for(j = 1; j <= OVERALL_SIZE; j++)
-	// 	{
-	// 		if(!canPut(board, i, j)){
-	// 			printf("This problem can NOT be solved.\n");
-	// 			return 0;
-	// 		}
-	// 	}
-	// }
-	if(input(board) && solve(board, 0))
+	int board[OVERALL_SIZE * OVERALL_SIZE];//解いた結果を格納する配列
+	if(input(board) && solve(board, 0))//解ける問題かどうかの確認(実際に解いてみる)
 	{
 		display(board);
 		printf("This problem can be solved.\n");
