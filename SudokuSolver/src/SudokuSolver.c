@@ -85,17 +85,27 @@ int solve(int *board, int place)
 
 int main() 
 {
-	char input[OVERALL_SIZE][OVERALL_SIZE];
-	int i;
+	char problem[OVERALL_SIZE][OVERALL_SIZE];
+	int i, j;
 	for(i = 0; i < OVERALL_SIZE; i++)
 	{
-		scanf("%s", input[i]);
+		scanf("%s", problem[i]);
 	}
 	printf("\n");
 	int board[OVERALL_SIZE * OVERALL_SIZE];
 	for(i = 0; i < OVERALL_SIZE * OVERALL_SIZE; i++)
 	{
-		board[i] = input[i / OVERALL_SIZE][i % OVERALL_SIZE] - '0';
+		board[i] = problem[i / OVERALL_SIZE][i % OVERALL_SIZE] - '0';
+	}
+	for(i = 0; i < OVERALL_SIZE * OVERALL_SIZE; i++)
+	{
+		for(j = 1; j <= OVERALL_SIZE; j++)
+		{
+			if(!canPut(board, i, j)){
+				printf("This problem can NOT be solved.\n");
+				return 0;
+			}
+		}
 	}
 	if(solve(board, 0))
 	{
