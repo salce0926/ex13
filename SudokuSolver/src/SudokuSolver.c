@@ -89,10 +89,10 @@ int solve(int *board, int place)//実際に解くための再帰関数
 	return 0;//どの数も置けなかったのでfalseを返す
 }
 
-void errorMessage(int i, int j, int k)
+void errorMessage(int i, int j, int k)//数字の重複についての指摘を出力
 {
 	char pattern[] = "column";
-	if(k == 0)
+	if(k == 0)//どこで重複しているかを判別
 	{
 		pattern[0] = 'r';
 		pattern[2] = 'w';
@@ -112,45 +112,39 @@ int check(int *board)
 {
 	int count[3] = {0, 0, 0};
 	int i, j, k;
-	for(i = 0; i < OVERALL_SIZE; i++)
+	for(i = 0; i < OVERALL_SIZE * OVERALL_SIZE; i++)
+	{
+		if(!(0 <= board[i] && board[i] <= 9))//範囲外の入力もしくは情報の不足を判別
+		{
+			printf("Please follow the input format.\n");
+			return 0;
+		}
+	}
+
+	for(i = 0; i < OVERALL_SIZE; i++)//入力時点での数字の重複がないかを走査
 	{
 		for(j = 0; j < OVERALL_SIZE; j++)
 		{
 			for(k = 0; k < OVERALL_SIZE; k++)
 			{
-				if(board[(i * OVERALL_SIZE) + k] == j + 1)
+				if(board[(i * OVERALL_SIZE) + k] == j + 1)//列についての確認
 				{
 					count[0]++;
 				}
-				if(board[i + (k * OVERALL_SIZE)] == j + 1)
+				if(board[i + (k * OVERALL_SIZE)] == j + 1)//行についての確認
 				{
 					count[1]++;
 				}
-				if(board[((i / BOX_SIZE) * BOX_SIZE * OVERALL_SIZE) + ((i % BOX_SIZE) * BOX_SIZE) + ((k / BOX_SIZE) * OVERALL_SIZE) + (k % BOX_SIZE)] == j + 1)
+				if(board[((i / BOX_SIZE) * BOX_SIZE * OVERALL_SIZE) + ((i % BOX_SIZE) * BOX_SIZE) + ((k / BOX_SIZE) * OVERALL_SIZE) + (k % BOX_SIZE)] == j + 1)//箱についての確認
 				{
 					count[2]++;
 				}
 			}
 			for(k = 0; k < 3; k++)
 			{
-				if(count[k] >= 2)
+				if(count[k] >= 2)//同じ数字が2つ以上ある場合指摘
 				{
 					errorMessage(i, j, k);
-					// char pattern[] = "column";
-					// if(k == 0)
-					// {
-					// 	pattern[0] = 'r';
-					// 	pattern[2] = 'w';
-					// 	pattern[3] = '\0';
-					// }
-					// else if(k == 2)
-					// {
-					// 	pattern[0] = 'b';
-					// 	pattern[2] = 'x';
-					// 	pattern[3] = '\0';
-					// }
-					// printf("Number is already duplicated.\n");
-					// printf("pattern: %s\nplace: %d\nnumber: %d\n", pattern, i, j + 1);
 					return 0;
 				}
 				count[k] = 0;
@@ -163,6 +157,18 @@ int check(int *board)
 
 int input(int *board)//入力用の関数
 {
+	printf("075090000\n");
+	printf("902100030\n");
+	printf("006040001\n");
+	printf("010023000\n");
+	printf("060000080\n");
+	printf("500900002\n");
+	printf("000500270\n");
+	printf("001000809\n");
+	printf("000060040\n");
+	printf("This is the input format.\n\n");
+
+	printf("Please input and press enter.\n");
 	char problem[OVERALL_SIZE][OVERALL_SIZE];//ユーザーの入力を格納する配列
 	int i, j;
 	for(i = 0; i < OVERALL_SIZE; i++)//1行ずつ受け取る
@@ -174,18 +180,6 @@ int input(int *board)//入力用の関数
 	{
 		board[i] = problem[i / OVERALL_SIZE][i % OVERALL_SIZE] - '0';//文字列を数値に変換する
 	}
-//	for(i = 0; i < OVERALL_SIZE * OVERALL_SIZE; i++)//現時点で問題として成立しているかを確認する(現在実装中で、以下のコードは無能)
-//	{
-//		int check = 0;
-//		for(j = 1; j <= OVERALL_SIZE; j++)//checkはi番目のマスにいくつの数字が置けるかを格納する変数
-//		{
-//			check += canPut(board, i, j);
-//		}
-//		if(check == 0)
-//		{
-//			return 0;//ここに入る場合、どの数字も置けないマスが既に存在しているのでfalseを返す
-//		}
-//	}
 	return 1;
 }
 
@@ -226,4 +220,6 @@ int main()
 451732869
 723869145
 This problem can be solved.
+
+欠け、重複、数字以外、多い
 */
