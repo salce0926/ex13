@@ -89,6 +89,43 @@ int solve(int *board, int place)//実際に解くための再帰関数
 	return 0;//どの数も置けなかったのでfalseを返す
 }
 
+int check(int *board)
+{
+	int count[3] = {0, 0, 0};
+	int i, j, k;
+	for(i = 0; i < OVERALL_SIZE; i++)
+	{
+		for(j = 0; j < OVERALL_SIZE; j++)
+		{
+			for(k = 0; k < OVERALL_SIZE; k++)
+			{
+				if(board[(i * OVERALL_SIZE) + k] == j + 1)
+				{
+					count[0]++;
+				}
+				if(board[i + (k * OVERALL_SIZE)] == j + 1)
+				{
+					count[1]++;
+				}
+				if(board[((i / BOX_SIZE) * BOX_SIZE * OVERALL_SIZE) + ((i % BOX_SIZE) * BOX_SIZE) + ((k / BOX_SIZE) * OVERALL_SIZE) + (k % BOX_SIZE)] == j + 1)
+				{
+					count[2]++;
+				}
+			}
+			for(k = 0; k < 3; k++)
+			{
+				if(count[k] == 2)
+				{
+					printf("i: %d\nj: %d\nk: %d\n", i, j, k);
+					return 0;
+				}
+				count[k] = 0;
+			}
+		}
+	}
+	return 1;
+}
+
 int input(int *board)//入力用の関数
 {
 	char problem[OVERALL_SIZE][OVERALL_SIZE];//ユーザーの入力を格納する配列
@@ -102,25 +139,26 @@ int input(int *board)//入力用の関数
 	{
 		board[i] = problem[i / OVERALL_SIZE][i % OVERALL_SIZE] - '0';//文字列を数値に変換する
 	}
-	for(i = 0; i < OVERALL_SIZE * OVERALL_SIZE; i++)//現時点で問題として成立しているかを確認する(現在実装中で、以下のコードは無能)
-	{
-		int check = 0;
-		for(j = 1; j <= OVERALL_SIZE; j++)//checkはi番目のマスにいくつの数字が置けるかを格納する変数
-		{
-			check += canPut(board, i, j);
-		}
-		if(check == 0)
-		{
-			return 0;//ここに入る場合、どの数字も置けないマスが既に存在しているのでfalseを返す
-		}
-	}
+//	for(i = 0; i < OVERALL_SIZE * OVERALL_SIZE; i++)//現時点で問題として成立しているかを確認する(現在実装中で、以下のコードは無能)
+//	{
+//		int check = 0;
+//		for(j = 1; j <= OVERALL_SIZE; j++)//checkはi番目のマスにいくつの数字が置けるかを格納する変数
+//		{
+//			check += canPut(board, i, j);
+//		}
+//		if(check == 0)
+//		{
+//			return 0;//ここに入る場合、どの数字も置けないマスが既に存在しているのでfalseを返す
+//		}
+//	}
 	return 1;
 }
+
 
 int main() 
 {
 	int board[OVERALL_SIZE * OVERALL_SIZE];//解いた結果を格納する配列
-	if(input(board) && solve(board, 0))//解ける問題かどうかの確認(実際に解いてみる)
+	if(input(board) && check(board) && solve(board, 0))//解ける問題かどうかの確認(実際に解いてみる)
 	{
 		display(board);
 		printf("This problem can be solved.\n");
