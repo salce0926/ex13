@@ -154,7 +154,6 @@ int check(int *board)
 	return 1;
 }
 
-
 int input(int *board)//入力用の関数
 {
 	printf("075090000\n");
@@ -170,7 +169,7 @@ int input(int *board)//入力用の関数
 
 	printf("Please input and press enter.\n");
 	char problem[OVERALL_SIZE][OVERALL_SIZE];//ユーザーの入力を格納する配列
-	int i, j;
+	int i;
 	for(i = 0; i < OVERALL_SIZE; i++)//1行ずつ受け取る
 	{
 		scanf("%s", problem[i]);
@@ -182,7 +181,6 @@ int input(int *board)//入力用の関数
 	}
 	return 1;
 }
-
 
 int main() 
 {
@@ -198,28 +196,3 @@ int main()
 	}
 	return 0;
 }
-
-/*
-075090000
-902100030
-006040001
-010023000
-060000080
-500900002
-000500270
-001000809
-000060040
-
-175396428
-942178536
-386245791
-817623954
-269451387
-534987612
-698514273
-451732869
-723869145
-This problem can be solved.
-
-欠け、重複、数字以外、多い
-*/
