@@ -89,6 +89,25 @@ int solve(int *board, int place)//実際に解くための再帰関数
 	return 0;//どの数も置けなかったのでfalseを返す
 }
 
+void errorMessage(int i, int j, int k)
+{
+	char pattern[] = "column";
+	if(k == 0)
+	{
+		pattern[0] = 'r';
+		pattern[2] = 'w';
+		pattern[3] = '\0';
+	}
+	else if(k == 2)
+	{
+		pattern[0] = 'b';
+		pattern[2] = 'x';
+		pattern[3] = '\0';
+	}
+	printf("Number is already duplicated.\n");
+	printf("pattern: %s\nplace: %d\nnumber: %d\n", pattern, i, j + 1);
+}
+
 int check(int *board)
 {
 	int count[3] = {0, 0, 0};
@@ -116,21 +135,22 @@ int check(int *board)
 			{
 				if(count[k] >= 2)
 				{
-					char pattern[] = "column";
-					if(k == 0)
-					{
-						pattern[0] = 'r';
-						pattern[2] = 'w';
-						pattern[3] = '\0';
-					}
-					else if(k == 2)
-					{
-						pattern[0] = 'b';
-						pattern[2] = 'x';
-						pattern[3] = '\0';
-					}
-					printf("Number is already duplicated.\n");
-					printf("pattern: %s\nplace: %d\nnumber: %d\n", pattern, i, j + 1);
+					errorMessage(i, j, k);
+					// char pattern[] = "column";
+					// if(k == 0)
+					// {
+					// 	pattern[0] = 'r';
+					// 	pattern[2] = 'w';
+					// 	pattern[3] = '\0';
+					// }
+					// else if(k == 2)
+					// {
+					// 	pattern[0] = 'b';
+					// 	pattern[2] = 'x';
+					// 	pattern[3] = '\0';
+					// }
+					// printf("Number is already duplicated.\n");
+					// printf("pattern: %s\nplace: %d\nnumber: %d\n", pattern, i, j + 1);
 					return 0;
 				}
 				count[k] = 0;
@@ -139,6 +159,7 @@ int check(int *board)
 	}
 	return 1;
 }
+
 
 int input(int *board)//入力用の関数
 {
