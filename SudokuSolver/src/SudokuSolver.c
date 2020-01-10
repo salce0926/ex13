@@ -114,9 +114,23 @@ int check(int *board)
 			}
 			for(k = 0; k < 3; k++)
 			{
-				if(count[k] == 2)
+				if(count[k] >= 2)
 				{
-					printf("i: %d\nj: %d\nk: %d\n", i, j, k);
+					char pattern[] = "column";
+					if(k == 0)
+					{
+						pattern[0] = 'r';
+						pattern[2] = 'w';
+						pattern[3] = '\0';
+					}
+					else if(k == 2)
+					{
+						pattern[0] = 'b';
+						pattern[2] = 'x';
+						pattern[3] = '\0';
+					}
+					printf("Number is already duplicated.\n");
+					printf("pattern: %s\nplace: %d\nnumber: %d\n", pattern, i, j + 1);
 					return 0;
 				}
 				count[k] = 0;
